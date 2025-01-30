@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-slicer-auth
+  namespace: video-slicer-auth-api
+  labels:
+    app: video-slicer-auth
+  annotations:    
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: video-slicer-auth
+  template:
+    metadata:
+      labels:
+        app: video-slicer-auth
+    spec:
+      securityContext:
+        runAsGroup: 0
+        runAsUser: 0
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - video-slicer-auth
+            topologyKey: kubernetes.io/hostname
+      containers:
+      - image: 533267350475.dkr.ecr.sa-east-1.amazonaws.com/video-slicer-auth-api:latest
+        name: video-slicer-auth
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 500m
+            memory: 512Mi
+            ephemeral-storage: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+            ephemeral-storage: 256Mi
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: video-slicer-auth
+        - secretRef:
+            name: video-slicer-auth
+        volumeMounts:
+        - name: ephemeral
+          mountPath: /tmp
+      volumes:
+      - name: ephemeral
+        emptyDir: {}
+      imagePullSecrets:
+      - name: docker-registry
