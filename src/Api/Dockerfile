@@ -7,6 +7,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+
 COPY ["src/Api/Api.csproj", "src/Api/"]
 COPY ["src/Controller/Controller.csproj", "src/Controller/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
@@ -16,6 +17,7 @@ COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 RUN dotnet restore "./src/Api/Api.csproj"
 COPY . .
 WORKDIR "/src/src/Api"
+
 RUN dotnet build "./Api.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
