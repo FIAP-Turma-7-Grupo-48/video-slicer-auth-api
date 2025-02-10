@@ -9,6 +9,5 @@ namespace UseCase.Dtos
     public class UserResponse
     {
         public string Token { get; set; }
-        public List<string> Notification { get; set; }
     }
 }

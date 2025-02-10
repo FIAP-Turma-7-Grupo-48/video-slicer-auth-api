@@ -85,9 +85,8 @@ namespace UnitTest.UseCase
         [Fact]
         public async void DevePermitirAutenticarUsuario()
         {
-            UserRequest userRequest = new UserRequest
+            UserAuthenticateRequest userRequest = new UserAuthenticateRequest
             {
-                Name = "teste",
                 Email = "test@gmail.com",
                 Password = "aA2124(*&o0"
             };
@@ -117,9 +116,8 @@ namespace UnitTest.UseCase
         [Fact]
         public async void DevePermitirNaoAutenticarQuandoUsuarioInvalido()
         {
-            UserRequest userRequest = new UserRequest
+            UserAuthenticateRequest userRequest = new UserAuthenticateRequest
             {
-                Name = "teste",
                 Email = "test@gmail.com",
                 Password = "aA2124(*&o0"
             };
@@ -131,12 +129,12 @@ namespace UnitTest.UseCase
                                                          It.IsAny<string>(),
                                                          default)).Returns("12345awrfqwrgr03r");
 
-            _notificationContext.Object.AddNotification($"O usuário {userRequest.Name} não existe.");
+            _notificationContext.Object.AddNotification($"Login e Senha Inválido.");
 
             var result = await _userUseCase.AuthenticateUserAsync(userRequest);
 
 
-            Assert.True(result.Token == string.Empty);
+            Assert.Null(result);
             Assert.True(_notificationContext.Object.HasErrors);
             _userRepository.Verify(p => p.GetUserAsync(It.IsAny<string>()), Times.Exactly(1));
             _userService.Verify(p => p.GenerateTokenAsync(It.IsAny<string>(),
@@ -147,9 +145,8 @@ namespace UnitTest.UseCase
         [Fact]
         public async void DevePermitirNaoAutenticarQuandoSenhaInvalido()
         {
-            UserRequest userRequest = new UserRequest
+            UserAuthenticateRequest userRequest = new UserAuthenticateRequest
             {
-                Name = "teste",
                 Email = "test@gmail.com",
                 Password = "aA2124(*&o0$#"
             };
@@ -166,12 +163,12 @@ namespace UnitTest.UseCase
                                                          It.IsAny<string>(),
                                                          default)).Returns("12345awrfqwrgr03r");
 
-            _notificationContext.Object.AddNotification($"Senha {userRequest.Password} inválida.");
+            _notificationContext.Object.AddNotification($"Login e Senha Inválido.");
 
             var result = await _userUseCase.AuthenticateUserAsync(userRequest);
 
 
-            Assert.True(result.Token == string.Empty);
+            Assert.Null(result);
             Assert.True(_notificationContext.Object.HasErrors);
             _userRepository.Verify(p => p.GetUserAsync(It.IsAny<string>()), Times.Exactly(1));
             _userService.Verify(p => p.GenerateTokenAsync(It.IsAny<string>(),

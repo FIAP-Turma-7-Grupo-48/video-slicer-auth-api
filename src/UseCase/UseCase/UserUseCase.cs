@@ -66,7 +66,7 @@ namespace UseCase.UseCase
 
             string token = _userService.GenerateTokenAsync(user.Name, userRequest.Email, default);
 
-            return new UserResponse { Token = token, Notification = new List<string> { $"Token criado com sucesso." } };
+            return new UserResponse { Token = token };
         }
     }
 }
