@@ -1,4 +1,5 @@
 using Controller.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UseCase.Dtos;
 
@@ -18,20 +19,21 @@ namespace video_authenticator.Controllers
             _userApplication = userApplication;
         }
 
+        [Authorize]
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [HttpPost("create/user")]
+        [HttpPost]
         public async Task<IActionResult> CreateUser(UserRequest userRequest, CancellationToken cancellationToken)
         {
             await _userApplication.CreateUserAsync(userRequest);
 
-            return Ok();
+            return NoContent();
         }
 
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost("authenticate")]
-        public async Task<IActionResult> Authenticate(UserRequest userRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> Authenticate(UserAuthenticateRequest userRequest, CancellationToken cancellationToken)
         {
             var response = await _userApplication.AuthenticateUserAsync(userRequest, cancellationToken);
 

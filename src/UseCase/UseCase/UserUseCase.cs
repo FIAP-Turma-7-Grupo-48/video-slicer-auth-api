@@ -46,25 +46,25 @@ namespace UseCase.UseCase
             });
         }
 
-        public async Task<UserResponse> AuthenticateUserAsync(UserRequest userRequest)
+        public async Task<UserResponse?> AuthenticateUserAsync(UserAuthenticateRequest userRequest)
         {
             var user = await _userRepository.GetUserAsync(userRequest.Email);
 
             if (user == null)
             {
-                _notificationContext.AssertArgumentNotNull(user, $"O usuário {userRequest.Name} não existe.").ToString();
-                return new UserResponse { Token = string.Empty, Notification = new List<string> { $"O usuário {userRequest.Name} não existe." } };
+                _notificationContext.AssertArgumentNotNull(user, $"Login e Senha Inválido.").ToString();
+                return null;
             }
 
             var isPassValid = PasswordHelper.VerifyPassword(user.Password, userRequest.Password);
 
             if (!isPassValid)
             {
-                _notificationContext.AssertArgumentNotNull(user, $"Senha {userRequest.Password} inválida.").ToString();
-                return new UserResponse { Token = string.Empty, Notification = new List<string> { $"Senha {userRequest.Password} inválida." } };
+                _notificationContext.AssertArgumentNotNull(user, $"Login e Senha Inválido.").ToString();
+                return null;
             }
 
-            string token = _userService.GenerateTokenAsync(userRequest.Name, userRequest.Email, default);
+            string token = _userService.GenerateTokenAsync(user.Name, userRequest.Email, default);
 
             return new UserResponse { Token = token, Notification = new List<string> { $"Token criado com sucesso." } };
         }
