@@ -24,7 +24,6 @@ namespace video_authenticator.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRequest userRequest, CancellationToken cancellationToken)
         {
-            var x = User.Identity.Name;
             await _userApplication.CreateUserAsync(userRequest);
 
             return NoContent();
