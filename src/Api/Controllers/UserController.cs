@@ -10,7 +10,6 @@ namespace video_authenticator.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
-
         private readonly IUserApplication _userApplication;
 
         public UserController(ILogger<UserController> logger, IUserApplication userApplication)
@@ -25,6 +24,7 @@ namespace video_authenticator.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateUser(UserRequest userRequest, CancellationToken cancellationToken)
         {
+            var x = User.Identity.Name;
             await _userApplication.CreateUserAsync(userRequest);
 
             return NoContent();

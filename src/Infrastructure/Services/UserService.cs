@@ -15,14 +15,14 @@ namespace Infrastructure.Services
             _configuration = configuration;
         }
 
-        public string GenerateTokenAsync(string name, string email, CancellationToken cancellationToken)
+        public string GenerateTokenAsync(string id, string email, CancellationToken cancellationToken)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"]);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
-                new Claim(ClaimTypes.Name, name),
+                new Claim(ClaimTypes.Name, id),
                 new Claim(ClaimTypes.Email, email)
             }),
                 Expires = DateTime.UtcNow.AddHours(1),

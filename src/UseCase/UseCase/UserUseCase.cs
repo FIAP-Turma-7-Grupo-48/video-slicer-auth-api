@@ -64,7 +64,7 @@ namespace UseCase.UseCase
                 return null;
             }
 
-            string token = _userService.GenerateTokenAsync(user.Name, userRequest.Email, default);
+            string token = _userService.GenerateTokenAsync(user.Id, userRequest.Email, default);
 
             return new UserResponse { Token = token };
         }
