@@ -19,12 +19,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddUseCase();
 
-var config = new ConfigurationBuilder()
-            .AddJsonFile("appsettings.json")
-            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
-            .Build();
+//var config = new ConfigurationBuilder()
+//            .AddJsonFile("appsettings.json")
+//            .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", optional: true)
+//            .Build();
 
-var defaultConnectionString = builder.Configuration["MongoDb:ConnectionString"];
+var defaultConnectionString = Environment.GetEnvironmentVariable("DefaultConnection");
 
 
 builder.Services.AddInfrastructure(defaultConnectionString);
@@ -41,7 +41,7 @@ builder.Services.AddAuthentication(options =>
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JwtKey"))),
         ValidateIssuer = false,
         ValidateAudience = false
     };
