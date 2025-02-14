@@ -17,8 +17,7 @@ namespace video_authenticator.Controllers
             _logger = logger;
             _userApplication = userApplication;
         }
-
-        [Authorize]
+        
         [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [HttpPost]
